@@ -1,0 +1,55 @@
+{% extends 'screener_app/layout.html' %}
+
+{% block title %}Create Job Post - AI Resume Screener{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center animate-fade-in-up">
+    <div class="col-lg-8">
+        <div class="glass-card p-4 p-md-5">
+            <h2 class="mb-4 text-white"><i class="fa-solid fa-square-plus text-primary me-2"></i>Create New Job Posting</h2>
+            <p class="text-muted mb-4">Provide details about the job requirements. Uploaded candidate resumes will be scored and ranked against these properties.</p>
+            
+            <form method="POST" action="{% url 'create_job' %}" id="create-job-form">
+                {% csrf_token %}
+                
+                <!-- Job Title -->
+                <div class="mb-4">
+                    <label for="title" class="form-label fw-semibold text-white">Job Title</label>
+                    <input type="text" class="form-control bg-dark border-secondary text-white py-2 px-3" id="title" name="title" placeholder="e.g. Python Developer" required>
+                </div>
+                
+                <div class="row mb-4">
+                    <!-- Experience -->
+                    <div class="col-md-6">
+                        <label for="experience" class="form-label fw-semibold text-white">Experience Required</label>
+                        <input type="text" class="form-control bg-dark border-secondary text-white py-2 px-3" id="experience" name="experience" placeholder="e.g. 3-5 years" required>
+                    </div>
+                    <!-- Education -->
+                    <div class="col-md-6">
+                        <label for="education" class="form-label fw-semibold text-white">Education Required</label>
+                        <input type="text" class="form-control bg-dark border-secondary text-white py-2 px-3" id="education" name="education" placeholder="e.g. Bachelor's degree in CS" required>
+                    </div>
+                </div>
+                
+                <!-- Skills Required -->
+                <div class="mb-4">
+                    <label for="skills" class="form-label fw-semibold text-white">Required Skills (Comma-separated)</label>
+                    <textarea class="form-control bg-dark border-secondary text-white py-2 px-3" id="skills" name="skills" rows="2" placeholder="e.g. python, django, rest api, docker, postgresql" required></textarea>
+                    <div class="form-text text-muted">Separate each skill with a comma. The parsing engine will evaluate candidate alignment based on these exact values.</div>
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-4">
+                    <label for="description" class="form-label fw-semibold text-white">Detailed Job Description</label>
+                    <textarea class="form-control bg-dark border-secondary text-white py-2 px-3" id="description" name="description" rows="6" placeholder="Describe the responsibilities, daily operations, and other requirements of the role..." required></textarea>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top border-secondary border-opacity-10">
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-glass"><i class="fa-solid fa-arrow-left me-1"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary-glow px-4" id="submit-job">Create & Proceed</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

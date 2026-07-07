@@ -1,0 +1,156 @@
+{% extends 'screener_app/layout.html' %}
+
+{% block title %}Dashboard - AI Resume Screener{% endblock %}
+
+{% block content %}
+<div class="row mb-5 justify-content-center text-center animate-fade-in-up">
+    <div class="col-md-10">
+        <h1 class="display-4 fw-extrabold mb-3 text-white">AI-Powered Resume Screening System</h1>
+        <p class="lead text-muted fs-5">Automate recruitment with intelligent resume analysis and matching</p>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="row g-4 mb-5 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <!-- Stat 1: Total Jobs -->
+    <div class="col-6 col-lg-3">
+        <div class="glass-card stat-card d-flex flex-column align-items-center text-center h-100">
+            <div class="stat-icon text-primary">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div class="stat-value" id="stat-total-jobs">{{ total_jobs }}</div>
+            <div class="stat-label">Total Jobs</div>
+        </div>
+    </div>
+    
+    <!-- Stat 2: Resumes Screened -->
+    <div class="col-6 col-lg-3">
+        <div class="glass-card stat-card d-flex flex-column align-items-center text-center h-100">
+            <div class="stat-icon text-info">
+                <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <div class="stat-value" id="stat-resumes">{{ total_resumes }}</div>
+            <div class="stat-label">Resumes Screened</div>
+        </div>
+    </div>
+    
+    <!-- Stat 3: Avg Match Score -->
+    <div class="col-6 col-lg-3">
+        <div class="glass-card stat-card d-flex flex-column align-items-center text-center h-100">
+            <div class="stat-icon text-warning">
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <div class="stat-value" id="stat-avg-score">{{ avg_score }}%</div>
+            <div class="stat-label">Avg Match Score</div>
+        </div>
+    </div>
+    
+    <!-- Stat 4: Shortlisted -->
+    <div class="col-6 col-lg-3">
+        <div class="glass-card stat-card d-flex flex-column align-items-center text-center h-100">
+            <div class="stat-icon text-success">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="stat-value" id="stat-shortlisted">{{ shortlisted }}</div>
+            <div class="stat-label">Shortlisted</div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Area -->
+<div class="row g-4 mb-5 animate-fade-in-up" style="animation-delay: 0.2s;">
+    <!-- Recent Job Postings -->
+    <div class="col-lg-12">
+        <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fs-4 mb-0 text-white"><i class="fa-solid fa-list-check me-2 text-primary"></i>Recent Job Postings</h3>
+                <a href="{% url 'job_list' %}" class="btn btn-outline-glass btn-sm">View All Jobs</a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Experience Required</th>
+                            <th>Posted Date</th>
+                            <th>Resumes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td class="fw-bold text-white">{{ job.title }}</td>
+                            <td>{{ job.experience_required }}</td>
+                            <td>{{ job.posted_date|date:"M d, Y" }}</td>
+                            <td>
+                                <span class="badge bg-primary rounded-pill">{{ job.resumes.count }}</span>
+                            </td>
+                            <td>
+                                <a href="{% url 'job_detail' job.pk %}" class="btn btn-primary-glow btn-sm py-1 px-3" id="view-job-{{ job.pk }}">
+                                    <i class="fa-solid fa-eye me-1"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                No job postings created yet. Start by creating a job description.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 animate-fade-in-up" style="animation-delay: 0.3s;">
+    <!-- Key Features Card -->
+    <div class="col-md-6">
+        <div class="glass-card p-4 h-100">
+            <h4 class="mb-4 text-white"><i class="fa-solid fa-bolt me-2 text-warning"></i>Key Features</h4>
+            <ul class="list-unstyled">
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="fa-solid fa-circle-check text-success me-3 mt-1"></i>
+                    <div>
+                        <strong class="text-white">NLP-based resume parsing</strong>
+                        <p class="text-muted mb-0 fs-7">Automatically extracts contact info, skills, education, and experience from PDF/DOCX.</p>
+                    </div>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="fa-solid fa-circle-check text-success me-3 mt-1"></i>
+                    <div>
+                        <strong class="text-white">TF-IDF & semantic matching</strong>
+                        <p class="text-muted mb-0 fs-7">Matches resumes against job profiles using cosine similarity vectors.</p>
+                    </div>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="fa-solid fa-circle-check text-success me-3 mt-1"></i>
+                    <div>
+                        <strong class="text-white">Explainable scoring criteria</strong>
+                        <p class="text-muted mb-0 fs-7">Breaks down calculations into Skills, Experience, and Education alignments.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Quick Actions Card -->
+    <div class="col-md-6">
+        <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h4 class="mb-4 text-white"><i class="fa-solid fa-bolt-lightning me-2 text-info"></i>Quick Actions</h4>
+                <p class="text-muted">Create a job profile and upload resumes to start screening immediately. The parsing and ranking take less than a second per resume.</p>
+            </div>
+            <div class="d-grid mt-4">
+                <a href="{% url 'create_job' %}" class="btn btn-primary-glow py-3" id="quick-create-job">
+                    <i class="fa-solid fa-plus me-2"></i>Create New Job
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

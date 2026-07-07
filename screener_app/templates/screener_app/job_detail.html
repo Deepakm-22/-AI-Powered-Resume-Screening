@@ -1,0 +1,126 @@
+{% extends 'screener_app/layout.html' %}
+
+{% block title %}{{ job.title }} - Screening Details{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-5 animate-fade-in-up">
+    <!-- Left Details Card -->
+    <div class="col-lg-12">
+        <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap mb-4">
+                <div>
+                    <h2 class="display-6 fw-bold text-white mb-2">{{ job.title }}</h2>
+                    <div class="d-flex flex-wrap gap-3 text-muted fs-7">
+                        <span><i class="fa-solid fa-clock me-1 text-primary"></i> <strong>Experience:</strong> {{ job.experience_required }}</span>
+                        <span><i class="fa-solid fa-calendar me-1 text-info"></i> <strong>Posted:</strong> {{ job.posted_date|date:"M d, Y" }}</span>
+                        <span><i class="fa-solid fa-graduation-cap me-1 text-warning"></i> <strong>Education:</strong> {{ job.education_required }}</span>
+                        <span><i class="fa-solid fa-file-pdf me-1 text-danger"></i> <strong>Total Resumes:</strong> {{ resumes.count }}</span>
+                    </div>
+                </div>
+                <a href="{% url 'job_list' %}" class="btn btn-outline-glass btn-sm mt-2 mt-md-0"><i class="fa-solid fa-arrow-left me-1"></i> Back to Jobs</a>
+            </div>
+
+            <div class="border-top border-secondary border-opacity-15 pt-4">
+                <h5 class="text-white mb-3"><i class="fa-solid fa-gears me-2 text-primary"></i>Required Skills:</h5>
+                <div class="d-flex flex-wrap mb-4">
+                    {% for skill in skills_list %}
+                    <span class="badge-custom badge-skill">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+
+                <h5 class="text-white mb-2"><i class="fa-solid fa-align-left me-2 text-info"></i>Description:</h5>
+                <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3 text-light fs-7 lh-base whitespace-pre-wrap">
+                    {{ job.description|linebreaksbr }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Section -->
+<div class="row g-4 mb-5 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <div class="col-lg-12">
+        <div class="glass-card p-4">
+            <h4 class="text-white mb-4"><i class="fa-solid fa-file-arrow-up text-primary me-2"></i>Upload Resume</h4>
+            
+            <form method="POST" enctype="multipart/form-data" id="upload-resume-form" class="row g-3 align-items-center">
+                {% csrf_token %}
+                <div class="col-md-8">
+                    <input type="file" name="resumes" class="form-control bg-dark border-secondary text-white py-2 px-3" accept=".pdf,.docx,.doc" multiple required id="resume-file-input">
+                    <div class="form-text text-muted mt-2">Supported formats: PDF, DOC, DOCX. You can select multiple files for batch processing.</div>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary-glow w-100 py-2" id="upload-analyze-btn">
+                        <i class="fa-solid fa-paper-plane me-1"></i> Upload & Analyze
+                    </button>
+                    <!-- Trigger file picker directly for bulk upload visual identity -->
+                    <button type="button" class="btn btn-outline-glass w-100 py-2" onclick="document.getElementById('resume-file-input').click();">
+                        <i class="fa-solid fa-layer-group me-1"></i> Bulk Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Screened Resumes List -->
+<div class="row g-4 animate-fade-in-up" style="animation-delay: 0.2s;">
+    <div class="col-lg-12">
+        <div class="glass-card p-4">
+            <h4 class="text-white mb-4"><i class="fa-solid fa-table-list text-primary me-2"></i>Screened Resumes</h4>
+            
+            <div class="table-responsive">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Email</th>
+                            <th>Skills Match</th>
+                            <th>Overall Score</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resume in resumes %}
+                        <tr>
+                            <td class="fw-bold text-white">{{ resume.candidate_name|default:"Not Parsed" }}</td>
+                            <td>{{ resume.email|default:"Not Parsed" }}</td>
+                            <td>
+                                <span class="fw-semibold text-white">{{ resume.skills_match_score }}%</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-danger bg-opacity-70 px-3 py-2 rounded" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;">
+                                    {{ resume.overall_score }}%
+                                </span>
+                            </td>
+                            <td>
+                                {% if resume.status == 'Pending' %}
+                                <span class="badge-custom badge-pending">{{ resume.status }}</span>
+                                {% elif resume.status == 'Shortlisted' %}
+                                <span class="badge-custom badge-shortlisted">{{ resume.status }}</span>
+                                {% else %}
+                                <span class="badge-custom badge-rejected">{{ resume.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'candidate_detail' resume.pk %}" class="btn btn-primary-glow btn-sm py-1 px-3" id="view-candidate-{{ resume.pk }}">
+                                    <i class="fa-solid fa-eye me-1"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-file-shield fs-2 mb-3 d-block text-secondary"></i>
+                                No resumes uploaded for this job posting yet. Use the upload card above.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'screener_app/layout.html' %}
+
+{% block title %}Candidate Evaluation - {{ resume.candidate_name }}{% endblock %}
+
+{% block content %}
+<div class="row g-4 animate-fade-in-up">
+    <!-- Left Panel: Extracted Profile Information -->
+    <div class="col-lg-8">
+        <div class="glass-card p-4 mb-4">
+            <h2 class="display-6 fw-bold text-white mb-3" id="candidate-name">{{ resume.candidate_name|default:"Not Parsed" }}</h2>
+            
+            <div class="row g-3 text-light fs-7 mb-4 pb-3 border-bottom border-secondary border-opacity-10">
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fa-solid fa-envelope text-primary me-2 fs-6"></i>
+                    <span><strong>Email:</strong> <a href="mailto:{{ resume.email }}" class="text-light text-decoration-none">{{ resume.email|default:"Not Found" }}</a></span>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fa-solid fa-calendar-day text-info me-2 fs-6"></i>
+                    <span><strong>Uploaded:</strong> {{ resume.uploaded_at|date:"M d, Y H:i" }}</span>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fa-solid fa-phone text-success me-2 fs-6"></i>
+                    <span><strong>Phone:</strong> {{ resume.phone|default:"Not Found" }}</span>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <i class="fa-solid fa-briefcase text-warning me-2 fs-6"></i>
+                    <span><strong>Job:</strong> <span class="text-white">{{ job.title }}</span></span>
+                </div>
+            </div>
+
+            <!-- Extracted Skills -->
+            <div class="mb-4">
+                <h5 class="text-white mb-3"><i class="fa-solid fa-gears text-primary me-2"></i>Extracted Skills</h5>
+                <div class="d-flex flex-wrap">
+                    {% for skill in matched_skills %}
+                    <span class="badge-custom badge-skill badge-skill-match"><i class="fa-solid fa-circle-check me-1"></i> {{ skill }}</span>
+                    {% endfor %}
+                    {% for skill in other_skills %}
+                    <span class="badge-custom badge-skill"><i class="fa-solid fa-circle-info me-1"></i> {{ skill }}</span>
+                    {% endfor %}
+                    {% for skill in missing_skills %}
+                    <span class="badge-custom badge-skill badge-skill-missing"><i class="fa-solid fa-circle-xmark me-1"></i> {{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="mb-4">
+                <h5 class="text-white mb-3"><i class="fa-solid fa-business-time text-info me-2"></i>Experience</h5>
+                <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3 text-light fs-7 lh-base">
+                    {{ resume.experience_text|default:"No experience information extracted."|linebreaksbr }}
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="mb-4">
+                <h5 class="text-white mb-3"><i class="fa-solid fa-user-graduate text-warning me-2"></i>Education</h5>
+                <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3 text-light fs-7 lh-base">
+                    {{ resume.education_text|default:"No education information extracted."|linebreaksbr }}
+                </div>
+            </div>
+
+            <!-- Raw Resume Text -->
+            <div class="mb-0">
+                <h5 class="text-white mb-3"><i class="fa-solid fa-file-lines text-muted me-2"></i>Resume Text</h5>
+                <div class="bg-dark bg-opacity-30 border border-secondary border-opacity-15 rounded p-3 text-light fs-8 overflow-y-scroll" style="max-height: 250px; font-family: monospace; white-space: pre-wrap;">
+                    {{ resume.resume_text }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel: Match Scores Visualizer & Action Card -->
+    <div class="col-lg-4">
+        <!-- Match Scores Card -->
+        <div class="glass-card p-4 mb-4 text-center">
+            <h4 class="text-white mb-4 text-start"><i class="fa-solid fa-chart-pie text-primary me-2"></i>Match Scores</h4>
+            
+            <div class="score-circle-container">
+                <svg width="140" height="140">
+                    <!-- Define gradient -->
+                    <defs>
+                        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ef4444" />
+                            <stop offset="100%" stop-color="#a855f7" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="70" cy="70" r="60" class="score-circle-bg" />
+                    <!-- Circle perimeter = 2 * pi * 60 = 377. Let's calculate stroke-dashoffset based on score -->
+                    <circle cx="70" cy="70" r="60" class="score-circle-bar" 
+                            stroke-dasharray="377" 
+                            stroke-dashoffset="{{ 377|add:-377|add:377 }}"
+                            id="progress-circle" />
+                </svg>
+                <div class="score-text" id="score-percentage">{{ resume.overall_score }}%</div>
+            </div>
+            
+            <span class="badge bg-danger bg-opacity-70 px-4 py-2 rounded-pill fw-bold fs-7 mb-4 d-inline-block" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;">
+                Overall Match
+            </span>
+
+            <!-- Individual components progress bars -->
+            <div class="text-start mt-3">
+                <div class="d-flex justify-content-between text-light fs-8 mb-1">
+                    <span>Skills Match</span>
+                    <span class="text-white fw-semibold" id="score-skills">{{ resume.skills_match_score }}%</span>
+                </div>
+                <div class="custom-progress">
+                    <div class="custom-progress-bar progress-skills" style="width: {{ resume.skills_match_score }}%;"></div>
+                </div>
+
+                <div class="d-flex justify-content-between text-light fs-8 mb-1">
+                    <span>Experience Match</span>
+                    <span class="text-white fw-semibold" id="score-experience">{{ resume.experience_match_score }}%</span>
+                </div>
+                <div class="custom-progress">
+                    <div class="custom-progress-bar progress-experience" style="width: {{ resume.experience_match_score }}%;"></div>
+                </div>
+
+                <div class="d-flex justify-content-between text-light fs-8 mb-1">
+                    <span>Education Match</span>
+                    <span class="text-white fw-semibold" id="score-education">{{ resume.education_match_score }}%</span>
+                </div>
+                <div class="custom-progress">
+                    <div class="custom-progress-bar progress-education" style="width: {{ resume.education_match_score }}%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Card -->
+        <div class="glass-card p-4">
+            <h4 class="text-white mb-4"><i class="fa-solid fa-sliders text-primary me-2"></i>Actions</h4>
+            
+            <div class="d-grid gap-3">
+                {% if resume.status != 'Shortlisted' %}
+                <a href="{% url 'shortlist_candidate' resume.pk %}" class="btn btn-outline-success py-2 fw-semibold d-flex align-items-center justify-content-center" id="action-shortlist">
+                    <i class="fa-solid fa-circle-check me-2"></i> Shortlist Candidate
+                </a>
+                {% else %}
+                <button class="btn btn-success py-2 fw-semibold d-flex align-items-center justify-content-center" disabled>
+                    <i class="fa-solid fa-circle-check me-2"></i> Candidate Shortlisted
+                </button>
+                {% endif %}
+                
+                {% if resume.status != 'Rejected' %}
+                <a href="{% url 'reject_candidate' resume.pk %}" class="btn btn-outline-danger py-2 fw-semibold d-flex align-items-center justify-content-center" id="action-reject">
+                    <i class="fa-solid fa-circle-xmark me-2"></i> Reject Candidate
+                </a>
+                {% else %}
+                <button class="btn btn-danger py-2 fw-semibold d-flex align-items-center justify-content-center" disabled>
+                    <i class="fa-solid fa-circle-xmark me-2"></i> Candidate Rejected
+                </button>
+                {% endif %}
+                
+                <a href="{% url 'download_resume' resume.pk %}" class="btn btn-outline-glass py-2 fw-semibold d-flex align-items-center justify-content-center" id="action-download">
+                    <i class="fa-solid fa-download me-2 text-primary"></i> Download Resume
+                </a>
+                
+                <a href="{% url 'job_detail' job.pk %}" class="btn btn-outline-glass py-2 fw-semibold d-flex align-items-center justify-content-center" id="action-back">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Back to Job
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animate the main circular progress bar based on score value
+    document.addEventListener("DOMContentLoaded", function() {
+        const circle = document.getElementById('progress-circle');
+        const score = parseFloat("{{ resume.overall_score }}");
+        const radius = 60;
+        const circumference = 2 * Math.PI * radius;
+        
+        // Calculate offset (draw percentage of circle border)
+        const offset = circumference - (score / 100) * circumference;
+        
+        // Apply dashoffset with transition delay
+        setTimeout(() => {
+            circle.style.strokeDashoffset = offset;
+        }, 150);
+    });
+</script>
+{% endblock %}

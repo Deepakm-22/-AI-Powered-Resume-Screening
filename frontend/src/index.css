@@ -1,0 +1,345 @@
+/* AI Resume Screener - Premium Glassmorphic Stylesheet */
+
+:root {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+    --card-bg: rgba(30, 41, 59, 0.45);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --glass-blur: blur(16px);
+    
+    --primary-color: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.5);
+    --secondary-color: #a855f7;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    
+    --font-heading: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Components */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px);
+}
+
+.glass-nav {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--card-border);
+}
+
+/* Custom Buttons with Glow */
+.btn-primary-glow {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border: none;
+    color: white !important;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary-glow:hover {
+    box-shadow: 0 6px 20px 0 rgba(99, 102, 241, 0.6);
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+.btn-outline-glass {
+    background: transparent;
+    color: var(--text-main) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline-glass:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Stats Cards styling matching first screenshot */
+.stat-card {
+    position: relative;
+    padding: 24px;
+    overflow: hidden;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    opacity: 0.8;
+    margin-bottom: 12px;
+}
+
+.stat-value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    font-family: var(--font-heading);
+    background: linear-gradient(to right, #ffffff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+/* Table styling */
+.glass-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.glass-table th {
+    color: var(--text-muted) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    border: none;
+}
+
+.glass-table tr {
+    background: rgba(30, 41, 59, 0.3);
+    transition: all 0.2s ease;
+}
+
+.glass-table tr:hover {
+    background: rgba(30, 41, 59, 0.6);
+}
+
+.glass-table td {
+    padding: 16px;
+    border-top: 1px solid var(--card-border);
+    border-bottom: 1px solid var(--card-border);
+    color: var(--text-main);
+}
+
+.glass-table td:first-child {
+    border-left: 1px solid var(--card-border);
+    border-radius: 12px 0 0 12px;
+}
+
+.glass-table td:last-child {
+    border-right: 1px solid var(--card-border);
+    border-radius: 0 12px 12px 0;
+}
+
+/* Badges styling */
+.badge-custom {
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid transparent;
+}
+
+.badge-skill {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border-color: rgba(99, 102, 241, 0.3);
+    margin-right: 6px;
+    margin-bottom: 8px;
+}
+
+.badge-skill-match {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badge-skill-missing {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.badge-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badge-shortlisted {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badge-rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Custom Progress bar styling matching screenshots */
+.custom-progress {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.custom-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.8s ease-in-out;
+}
+
+.progress-skills {
+    background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.progress-experience {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.progress-education {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+/* Custom File Upload Dropzone */
+.upload-zone {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+/* Score Circle Visualizer */
+.score-circle-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 10;
+}
+
+.score-circle-bar {
+    fill: none;
+    stroke: url(#scoreGradient);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 1s ease-out;
+}
+
+.score-text {
+    position: absolute;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: white;
+}
+
+/* Ensure Bootstrap text-muted is highly readable on dark backgrounds */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Animation Utilities */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom inputs for dark mode integration */
+input[type="file"].form-control {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-main) !important;
+}
+input[type="file"].form-control::file-selector-button {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.375rem 0.75rem !important;
+    margin-right: 0.75rem !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+}

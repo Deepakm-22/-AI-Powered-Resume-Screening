@@ -1,0 +1,115 @@
+{% extends 'screener_app/layout.html' %}
+
+{% block title %}Analytics - AI Resume Screener{% endblock %}
+
+{% block content %}
+<div class="row mb-5 justify-content-between align-items-center animate-fade-in-up">
+    <div class="col-md-8">
+        <h2 class="text-white"><i class="fa-solid fa-chart-line text-primary me-2"></i>Analytics Dashboard</h2>
+        <p class="text-muted">Inspect resume evaluation statistics and job alignments</p>
+    </div>
+</div>
+
+<!-- Score Distribution Panel -->
+<div class="glass-card p-4 mb-5 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <h4 class="text-white mb-4"><i class="fa-solid fa-chart-bar text-primary me-2"></i>Score Distribution</h4>
+    
+    <div class="row g-3 text-center">
+        <!-- Bracket 1: 90-100% -->
+        <div class="col">
+            <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3">
+                <div class="display-6 fw-bold text-success mb-1" id="bracket-90">{{ score_90_100 }}</div>
+                <div class="text-muted fs-8 text-uppercase fw-semibold">90-100%</div>
+            </div>
+        </div>
+        <!-- Bracket 2: 80-89% -->
+        <div class="col">
+            <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3">
+                <div class="display-6 fw-bold text-info mb-1" id="bracket-80">{{ score_80_89 }}</div>
+                <div class="text-muted fs-8 text-uppercase fw-semibold">80-89%</div>
+            </div>
+        </div>
+        <!-- Bracket 3: 70-79% -->
+        <div class="col">
+            <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3">
+                <div class="display-6 fw-bold text-primary mb-1" id="bracket-70">{{ score_70_79 }}</div>
+                <div class="text-muted fs-8 text-uppercase fw-semibold">70-79%</div>
+            </div>
+        </div>
+        <!-- Bracket 4: 60-69% -->
+        <div class="col">
+            <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3">
+                <div class="display-6 fw-bold text-warning mb-1" id="bracket-60">{{ score_60_69 }}</div>
+                <div class="text-muted fs-8 text-uppercase fw-semibold">60-69%</div>
+            </div>
+        </div>
+        <!-- Bracket 5: Below 60% -->
+        <div class="col">
+            <div class="bg-dark bg-opacity-20 border border-secondary border-opacity-10 rounded p-3">
+                <div class="display-6 fw-bold text-danger mb-1" id="bracket-below">{{ score_below_60 }}</div>
+                <div class="text-muted fs-8 text-uppercase fw-semibold">Below 60%</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Job-wise Statistics Panel -->
+<div class="glass-card p-4 animate-fade-in-up" style="animation-delay: 0.2s;">
+    <h4 class="text-white mb-4"><i class="fa-solid fa-list-check text-primary me-2"></i>Job-wise Statistics</h4>
+    
+    <div class="table-responsive">
+        <table class="glass-table">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Total Resumes</th>
+                    <th>Average Score</th>
+                    <th>Experience Required</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in job_stats %}
+                <tr>
+                    <td class="fw-bold text-white">{{ item.job.title }}</td>
+                    <td>
+                        <span class="badge bg-primary rounded-pill">{{ item.count }}</span>
+                    </td>
+                    <td>
+                        {% if item.count > 0 %}
+                            {% if item.avg_score >= 80.0 %}
+                            <span class="badge bg-success bg-opacity-70 px-3 py-2 rounded">
+                                {{ item.avg_score }}%
+                            </span>
+                            {% elif item.avg_score >= 60.0 %}
+                            <span class="badge bg-warning bg-opacity-70 px-3 py-2 rounded text-dark">
+                                {{ item.avg_score }}%
+                            </span>
+                            {% else %}
+                            <span class="badge bg-danger bg-opacity-70 px-3 py-2 rounded">
+                                {{ item.avg_score }}%
+                            </span>
+                            {% endif %}
+                        {% else %}
+                        <span class="text-muted">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.job.experience_required }}</td>
+                    <td>
+                        <a href="{% url 'job_detail' item.job.pk %}" class="btn btn-primary-glow btn-sm py-1 px-3" id="view-analytics-job-{{ item.job.pk }}">
+                            <i class="fa-solid fa-eye me-1"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">
+                        No job postings created yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

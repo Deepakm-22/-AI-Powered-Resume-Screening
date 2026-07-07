@@ -1,0 +1,55 @@
+{% extends 'screener_app/layout.html' %}
+
+{% block title %}All Job Postings - AI Resume Screener{% endblock %}
+
+{% block content %}
+<div class="row mb-4 justify-content-between align-items-center animate-fade-in-up">
+    <div class="col-md-6">
+        <h2 class="text-white"><i class="fa-solid fa-briefcase text-primary me-2"></i>Job Postings</h2>
+        <p class="text-muted">Manage all active jobs and candidate screening lists</p>
+    </div>
+    <div class="col-md-auto">
+        <a href="{% url 'create_job' %}" class="btn btn-primary-glow"><i class="fa-solid fa-plus me-1"></i> Post New Job</a>
+    </div>
+</div>
+
+<div class="glass-card p-4 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <div class="table-responsive">
+        <table class="glass-table">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Experience</th>
+                    <th>Required Education</th>
+                    <th>Resumes Screened</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td class="fw-bold text-white">{{ job.title }}</td>
+                    <td>{{ job.experience_required }}</td>
+                    <td>{{ job.education_required }}</td>
+                    <td>
+                        <span class="badge bg-primary rounded-pill">{{ job.resumes.count }} Resumes</span>
+                    </td>
+                    <td>
+                        <a href="{% url 'job_detail' job.pk %}" class="btn btn-primary-glow btn-sm py-1 px-3" id="view-job-list-{{ job.pk }}">
+                            <i class="fa-solid fa-magnifying-glass me-1"></i> Screen Resumes
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="fa-regular fa-folder-open fs-2 mb-3 d-block text-secondary"></i>
+                        No job postings found. Click "Post New Job" above to create one.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
