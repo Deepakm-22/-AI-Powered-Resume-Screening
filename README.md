@@ -69,7 +69,7 @@ ai_resume_screener/
 
 ---
 
-## 🚀 Local Installation & Execution
+🚀 Local Installation & Execution
 
 ### Part 1: Backend Django Setup
 1. **Initialize Virtual Environment & Install Packages**:
