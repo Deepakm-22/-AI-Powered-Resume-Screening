@@ -125,7 +125,6 @@ ai_resume_screener/
    * Open your browser and navigate to: **[http://localhost:5173/](http://localhost:5173/)**
    * *Note: The Django backend has a built-in root URL redirect. Visiting `http://127.0.0.1:8000/` will automatically redirect you to the React development server.*
 
----
 
 ## 📄 Academic Resources Included
 For academic submissions, look under the `docs/` directory:
