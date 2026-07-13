@@ -126,7 +126,7 @@ ai_resume_screener/
    * *Note: The Django backend has a built-in root URL redirect. Visiting `http://127.0.0.1:8000/` will automatically redirect you to the React development server.*
 
 
-## 📄 Academic Resources Included
+### 📄 Academic Resources Included
 For academic submissions, look under the `docs/` directory:
 * **Project Report**: Refer to [docs/project_report.md](docs/project_report.md) for a structured chapter format including system UMLs, database tables (ERD), methodology formulations, and test logs.
 * **Defense Slides**: Refer to [docs/presentation_defense.md](docs/presentation_defense.md) for a slide-by-slide project review slide deck and speaker scripts.
